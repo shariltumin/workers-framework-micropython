@@ -8,7 +8,7 @@ There are two versions of MicroPython in the *unix* directory: one compiled with
 
 The Windows version includes fewer features than the Unix version; for example, the Unix version includes *_threads* and *usocket* while the Windows version does not. Of course, *machine.Pin* and similar functions are not supported in these versions. 
 
-There is also a "Linux raspberrypi 4.19.97-v7l+" version in the raspberrypi directory. 
+There is also a "Linux raspberrypi 4.19.97-v7l+" version in the *raspberrypi* directory. 
 
 These versions, however, support *worker* and *pipe* as *frozen modules*.
 To use, simply import the module, for example,
