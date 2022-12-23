@@ -1,6 +1,6 @@
 # MicroPython on Unix and Windows
 
-From [MicroPython downloads](https://micropython.org/download/), one can choose from hundreds of different ports, features, vendors, and MCUs. However, if you want a micropython that runs on **Linux** or **Windows** PCs, you need to build one for yourself.
+From [MicroPython downloads](https://micropython.org/download/), one can choose from many different ports, features, vendors, and MCUs. However, if you want a micropython that runs on **Linux** or **Windows** PCs, you need to build one for yourself.
 
 Under *windows*, there is a micropython.exe file that can be downloaded and used to run MicroPython on a Windows PC. 
 
