@@ -11,6 +11,69 @@ if you are interested in purchasing the full version.
 If you'd prefer to read this book as a flipbook online whenever and wherever you want, 
 go to [https://shariltumin.gumroad.com/l/rbkkbn](https://shariltumin.gumroad.com/l/rbkkbn) and get one.
 
+What's the big deal? You might be asking me. Let me give you a simple example of sequential versus concurrent execution.
+
+``` python
+# s_abcd.py - sequential script
+def fun(n,m):
+    for i in range(m):
+       print(f'{n} at {i}')
+
+fun('A',3)
+fun('B',3)
+fun('C',3)
+fun('D',3)
+
+```
+and
+
+``` python
+# c_abcd.py - concurrent script
+from worker import task, MT
+
+@task
+def fun(p):
+    n,m = p
+    c = yield
+    for i in range(m):
+       print(f'{n} at {i}')
+       yield
+    yield 'OK'
+
+mt=MT(4)
+
+mt.worker(fun, ('A',3)) # creat worker
+mt.worker(fun, ('B',3))
+mt.worker(fun, ('C',3))
+mt.worker(fun, ('D',3))
+mt.start()              # start all workers
+print(mt.log())         # check for any error
+
+```
+
+The outputs of these two scripts shown side-by-side in the table below.
+
+| s_abcd.py                       |  c_abcd.py                 |
+|---------------------------------|----------------------------|
+| A at 0                          | A at 0                     |
+| A at 1                          | B at 0                     |
+| A at 2                          | C at 0                     |
+| B at 0                          | D at 0                     |
+| B at 1                          | A at 1                     |
+| B at 2                          | B at 1                     |
+| C at 0                          | C at 1                     |
+| C at 1                          | D at 1                     |
+| C at 2                          | A at 2                     |
+| D at 0                          | B at 2                     |
+| D at 1                          | C at 2                     |
+| D at 2                          | D at 2                     |
+
+
+I hope you recognize the significance of these results.
+
+Instead of four ```for``` loops, how about four ```while True``` loops? *Tasks* running as *workers* will solve the problem nicely.
+
+
 Here's a simple example of using REPL keyboard input to control the rate at which the *Raspberry Pi Pico*'s onboard LED blinks.
 
 ``` python
