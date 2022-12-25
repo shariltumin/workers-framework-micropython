@@ -51,7 +51,7 @@ print(mt.log())         # check for any error
 
 ```
 
-The outputs of these two scripts shown side-by-side in the table below.
+In the table below, the outputs of these two scripts are shown side by side. 
 
 | s_abcd.py                       |  c_abcd.py                 |
 |---------------------------------|----------------------------|
