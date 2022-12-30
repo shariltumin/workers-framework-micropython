@@ -1,3 +1,4 @@
+"""
 /*
  * The MIT License (MIT)
  *
@@ -21,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+"""
 
 from gc import enable, collect
 from utime import ticks_ms, ticks_diff
