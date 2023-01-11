@@ -123,3 +123,69 @@ mt.worker(blink, (25,)) # worker for LED (out)
 mt.start()
 
 ```
+
+Here's an example of how we can use UART to connect two esp32 boards.
+Three jumper wires will be required.
+The two tx and rx pins must be crossed, i.e. the first esp32's tx-pin is connected to the second esp32's rx-pin, and the second esp32's rx-pin is connected to the first esp32's tx-pin.
+Connect the GND-pin of the first esp32 to the GND-pin of the second esp32.
+These two esp32 boards communicate via serial lines by sending and receiving messages.
+
+``` python
+
+from worker import task, MT
+from machine import UART
+from urandom import random
+
+# Need 3 jumper wires
+# Connect A:16  to  B:17
+#         A:17  to  B:16
+#         A:GND to  B:GND
+
+uart = UART(2, baudrate=576000, tx=16, rx=17)
+name = 'A' # either 'A' or 'B' (or anything you want)
+
+@task
+def get(p):
+    u=p[0]
+    c=yield
+    while True:
+      if u.any()==0: 
+         yield
+      else:
+         m=u.read()
+         print('GET:', m.decode())
+         if m[:2]!=b'##': 
+             mt.worker(rep, (u, m))
+
+@task
+def rep(p):
+    u,m=p
+    c=yield
+    wait=c.delay(random()*10+200)
+    while wait(): yield
+    u.write(b'##'+m.upper())
+    yield 'done'
+
+@task
+def put(p):
+    u,n=p
+    c=yield
+    cnt=0
+    while True:
+      m=f'The count at {n} now is {cnt}.'
+      print('PUT:', m)
+      w=u.write(m)
+      if w!=len(m):
+         print(f'Write error: {w} chars written out of {len(m)}')
+      cnt+=1
+      wait=c.delay(random()*1000+200)
+      while wait(): yield
+
+mt=MT(10)
+mt.worker(get, (uart,))
+mt.worker(put, (uart, name))
+mt.start()
+
+```
+
+
